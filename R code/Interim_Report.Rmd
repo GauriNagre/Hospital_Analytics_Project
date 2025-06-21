@@ -1,0 +1,112 @@
+---
+title: "BA Interim Report"
+author: "Gauri Nagre"
+date: "2025-02-01"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# About Dataset
+The dataset contains *hospital data*, including *patient counts*, *readmission rates*, *waiting times*, and *staff utilization*. This aligns closely with the objectives outlined in the business proposal, which aims to enhance hospital efficiency and patient care through data-driven solutions. 
+
+The hospital is currently facing challenges such as high patient readmission rates (47.2%), prolonged waiting times (50 minutes), and inefficient staff utilization (2,400 units). 
+
+The goal is to reduce patient readmissions, decrease waiting times below 30 minutes, and improve staff utilization efficiency.
+
+The dataset serves as a critical tool for *identifying trends*, *measuring KPIs*, and implementing *evidence-based* strategies to transform the hospital into a leader in efficient and quality healthcare delivery.
+
+```{r}
+library(readxl)
+library(dplyr)
+library(tidyverse)
+library(janitor)
+```
+
+**library(readxl)** – Used to read Excel files into R.
+**library(dplyr)** – Helps in data manipulation like filtering, grouping, and summarizing.
+**library(tidyverse)** – A collection of packages for data cleaning, visualization, and analysis.
+**library(janitor)** – Cleans and formats messy column names and handles missing data efficiently.
+
+```{r}
+library(readxl)
+
+df <- read_excel("C:/Users/Gauri Vijay Nagre/Desktop/Sem_2/BA/BA_Lifeline_Hospital_Dashboard/Hospital Dataset3.xlsx")
+
+head(df)
+```
+
+```{r}
+clean_names(df)
+names(df)
+```
+
+
+#### The dataset was downloaded from Kaggle and Github ,citataion is as per below.
+#### It was a combination of two datasets in order to draw desirable insights from the dataset.
+
+### Kaggle Link - 
+*https://www.kaggle.com/datasets/himanshunegi2000/hospitals-in-india-dataset*
+
+### Github Link - 
+*https://github.com/WulanHardjo/Hospital-Health-Care-Management-Data-set*
+
+```{r}
+str(df)
+```
+
+# Meta data of the Dataset
+
+1. **Patient ID (int64)** - Unique identifier for each patient. (e.g., 1237)
+
+2. **Age (object)** - Patient's age group in brackets. (e.g., "(60-75)")
+
+3. **Length of Stay (object)** - Number of days a patient stayed in the hospital. (e.g., "7")
+
+4. **Medical Specialty (object)** - Department handling the patient. Some values are missing. (e.g., "Missing")
+
+5. **Glucose Test(int64)** - Indicates if a glucose test was performed (1 = Yes, 0 = No). (e.g., 0)
+
+6. **Diabetes Med (int64)** - Whether the patient is on diabetes medication (1 = Yes, 0 = No). (e.g., 1)
+
+7. **Ward Name (object)** - The specific ward where the patient was admitted. (e.g., "Cardiology Ward")
+
+8. **Respiratory Conditions (int64)** - Presence of respiratory conditions (1 = Yes, 0 = No). (e.g., 1)
+
+9. **Metabolic and Endocrine Conditions (int64)** - Presence of metabolic disorders (1 = Yes, 0 = No). (e.g., 0)
+
+10. **Hematological Conditions (int64)** - Presence of blood-related conditions (1 = Yes, 0 = No). (e.g., 1)
+
+11. **Mental Health and Psychiatric Disorders (int64)** - Presence of mental health issues (1 = Yes, 0 = No). (e.g., 0)
+
+12. **A1C Test (int64)** - Indicates if an A1C test was conducted (1 = Yes, 0 = No). (e.g., 0)
+
+13. **Autoimmune Conditions (int64)** - Presence of autoimmune diseases (1 = Yes, 0 = No). (e.g., 1)
+
+14. **Time Visited Hospital (object)** - Time range when the patient visited the hospital. (e.g., "1:00 AM - 5:00 AM")
+
+15. **Waiting Time (int64)** - Total waiting time in minutes before seeing a doctor. (e.g., 165)
+
+16. **Nurses Attending (object)** - Nurse assigned to the patient. (e.g., "N-CAR-008")
+
+17. **Doctors Attending (object)** - Doctor assigned to the patient. (e.g., "D-CAR-004")
+
+18. **Readmitted (int64)** - Whether the patient was readmitted within the same year (1 = Yes, 0 = No). (e.g., 0)
+
+## First Insight
+```{r}
+ggplot(df)+
+  aes(x = Doctors Attending, y = Waiting Time, fill = "red") +
+  stat_summary(fun = min, geom = "bar") +
+  theme_minimal() +
+  labs(title = "Minimum Waiting Time by Doctor", 
+       x = "Doctors Attending", 
+       y = "Waiting Time (Minutes)") +
+  scale_fill_manual(values = "red", guide = "none") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+From above graph we can say that Waiting times vary widely, with some doctors exceeding 150 minutes while most stay below 100 minutes.A few doctors experience extremely high wait times, possibly due to high patient loads or inefficiencies.Most doctors have moderate waiting times, suggesting balanced workloads and efficient management.
+
+Optimizing patient distribution and improving efficiency could help reduce excessive wait times.

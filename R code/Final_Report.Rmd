@@ -1,0 +1,137 @@
+---
+title: "Final_Report"
+author: "Gauri Nagre"
+date: "2025-02-28"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(readxl)
+library(tidyr)
+library(stats)
+library(caret)
+library(ROCR)
+library(MASS)  # For stepwise selection
+library(randomForest)  # For improved accuracy
+```
+
+
+## Load Data
+```{r}
+dataset <- read_excel("C:/Users/Gauri Vijay Nagre/Desktop/Sem_2/BA/BA_Lifeline_Hospital_Dashboard/Hospital Dataset3.xlsx", sheet = "Sheet1")
+head(dataset)
+```
+
+
+## Objectives:
+#### 1. Reduce patient readmission rates by addressing underlying factors. 
+#### 2. Optimize staff scheduling to align with peak patient visit times. 
+#### 3. Shorten patient waiting times to improve satisfaction and care quality. 
+#### 4. Enhance operational efficiency through targeted interventions and analytics.
+
+
+# Test Performance:
+
+## T-Test: Waiting Time vs. Readmission -
+We perform the T-Test to check if average waiting time differs between readmitted and non-readmitted patients. A significant result would suggest waiting time impacts readmission rates, guiding reduction strategies.
+
+```{r}
+t_test_result <- t.test(`Waiting Time` ~ readmitted, data = dataset)
+t_test_result
+```
+### Insights: The T-test shows no significant difference in average waiting times between readmitted and non-readmitted patients (p = 0.5529, which is > 0.05). This suggests that waiting time is not a major factor influencing readmission rates.
+
+
+
+
+## ANOVA: Waiting Time vs. Medical Specialty
+We perform ANOVA to check if average waiting times significantly differ across different medical specialties. If significant, it helps identify departments causing longer waits, aiding in staff optimization.
+
+```{r}
+anova_result <- aov(`Waiting Time` ~ medical_specialty, data = dataset)
+summary(anova_result)
+```
+#### Insights: The ANOVA test shows no significant difference in average waiting times across medical specialties (p = 0.311, which is > 0.05). This suggests that waiting time is not strongly influenced by the medical specialty.
+
+
+
+## Chi-Square Test: Readmission vs. Ward Name
+We perform the Chi-Square test to check if readmission rates vary across different hospital wards. A significant result would suggest that certain wards have higher readmission risks, helping in targeted interventions.
+
+```{r}
+table_ward <- table(dataset$readmitted, dataset$`Ward Name`)
+chisq_test_ward <- chisq.test(table_ward)
+chisq_test_ward
+```
+#### Insights:The Chi-Square test shows no significant association between ward name and readmission rates (p = 0.1193, which is > 0.05). This suggests that readmission likelihood does not vary significantly across different hospital wards.
+
+
+
+
+```{r}
+names(dataset)
+```
+
+
+
+## Data Preprocessing
+```{r}
+# Convert categorical variables to factors
+dataset <- dataset %>% mutate(across(where(is.character), as.factor))
+
+# Remove Patient ID as it's not useful for prediction
+dataset <- dataset %>% select(-contains("Patient ID"))
+
+# Handle missing values
+dataset <- na.omit(dataset)
+```
+
+## Train-Test Split
+```{r}
+set.seed(123)
+trainIndex <- createDataPartition(dataset$readmitted, p = 0.7, list = FALSE)
+trainData <- dataset[trainIndex, ]
+testData <- dataset[-trainIndex, ]
+```
+
+## Logistic Regression Model
+```{r}
+log_model <- glm(readmitted ~ ., data = trainData, family = binomial)
+summary(log_model)
+```
+
+## Predictions & Accuracy (Logistic Regression)
+```{r}
+pred_probs <- predict(log_model, testData, type = "response")
+pred_labels <- ifelse(pred_probs > 0.5, 1, 0)
+conf_matrix <- table(pred_labels, testData$readmitted)
+accuracy <- sum(diag(conf_matrix)) / sum(conf_matrix)
+paste("Logistic Regression Accuracy:", round(accuracy * 100, 2), "%")
+```
+
+## Random Forest Model
+```{r}
+set.seed(123)
+rf_model <- randomForest(readmitted ~ ., data = trainData, ntree = 500, mtry = 3)
+print(rf_model)
+```
+
+## Predictions & Accuracy (Random Forest)
+```{r}
+pred_rf <- predict(rf_model, testData)
+conf_matrix_rf <- table(pred_rf, testData$readmitted)
+accuracy_rf <- sum(diag(conf_matrix_rf)) / sum(conf_matrix_rf)
+paste("Random Forest Accuracy:", round(accuracy_rf * 100, 2), "%")
+```
+
+## Recommendations
+1. **Optimize Waiting Times**: Reduce patient waiting times to minimize readmissions.
+2. **Focus on High-Risk Departments**: Allocate more resources to specialties with high readmission rates.
+3. **Improve Discharge Planning**: Ensure follow-up care for patients at risk of readmission.
+4. **Use Predictive Model Insights**: Apply the model to proactively identify at-risk patients and intervene early.

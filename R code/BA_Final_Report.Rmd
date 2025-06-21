@@ -1,0 +1,346 @@
+---
+title: "Final_Rep"
+author: "Gauri Nagre"
+date: "2025-02-28"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+
+
+# Contribution of Each Group Member
+#### Gauri Nagre
+Role: Data Collection & Preprocessing,  Report Writing & Presentation
+Contribution: Responsible for gathering the hospital dataset, cleaning missing data, created visualizations, drafted the report and ensuring data quality for analysis.
+
+#### Rajwardhan Wagh
+Role: Data Analysis & Visualization
+Contribution: Conducted exploratory data analysis (EDA), created visualizations, and performed statistical analysis.
+
+#### Akshita jaiswal
+Role: Modelling & Interpretation
+Contribution: Implemented regression models, analyzed results, and derived key insights.
+
+
+____________________________________________________________________________________________________
+
+
+# Introduction
+
+### Overview of the Topic Area
+Efficient hospital management is critical for ensuring patient satisfaction and operational success. Key challenges include high patient readmission rates, long waiting times, and suboptimal staff utilization. Data-driven solutions can help address these inefficiencies. The dataset contains **hospital data**, including **patient counts**, **readmission rates**, **waiting times**, and **staff utilization**. This aligns closely with the objectives outlined in the business proposal, which aims to enhance hospital efficiency and patient care through data-driven solutions
+
+
+____________________________________________________________________________________________________
+
+
+
+# Statement of the Business Problem
+The hospital currently experiences:
+•	A 47.2% readmission rate, indicating gaps in post-discharge care.
+•	An average waiting time of 50 minutes, exceeding the target of 30 minutes.
+•	Staff utilization inefficiencies that impact hospital workflow.
+
+
+The goal is to reduce patient readmissions, decrease waiting times, and improve staff utilization efficiency through data-driven analysis.
+
+
+____________________________________________________________________________________________________
+
+
+
+# Methodology
+
+#### Data Source and Variables
+The dataset used for this analysis was sourced from [Hospital Database Name]. Key variables include:
+•	Patient Readmission (Binary: Yes/No)
+•	Waiting Time (Minutes)
+•	Doctors/Nurses Attending (Count)
+•	Staff Utilization (Workload Metric)
+•	Medical Specialty
+
+#### Data Preparation and Procedures
+•	Data Cleaning: Removed missing values, handled outliers, and standardized variable formats.
+•	Feature Engineering: Created derived variables (e.g., peak hours for patient visits).
+•	Normalization: Applied where necessary to improve model performance.
+
+
+#### Analytical Techniques Used
+•	Exploratory Data Analysis (EDA): To identify trends and correlations.
+•	Simple Linear Regression: To analyze the relationship between waiting time and staff availability.
+Justification for Techniques:
+•	Linear Regression is suitable for assessing continuous relationships (e.g., waiting time vs. nurses attending).
+•	This method helps in understanding cause-and-effect relationships between two continuous variables.
+•	It provides a quantifiable measure of how nurse availability affects waiting time, which directly ties into the business goal of reducing waiting times.
+
+
+____________________________________________________________________________________________________
+
+
+
+# Results
+
+#### Findings from Analysis and Modelling
+1. Model Performance Issues
+Accuracy: 49.03% → Poor predictive power.
+
+2. Significant Factors
+Higher Readmission Risk:
+Autoimmune Conditions (p = 0.0002).
+Late-night & Afternoon Visits (p < 0.001).
+
+Lower Readmission Risk:
+Patients from Cardiology, Emergency, Oncology, and Surgery Wards (p < 0.05).
+
+3. Model Instability
+Some Length of Stay categories have extreme estimates → possible data imbalance.
+Singularities (dropped variables) suggest collinearity issues.
+
+4. Improvement
+Tried tree-based models (Random Forest).
+Removed highly correlated or insignificant variables but still gives the same acuracy
+
+
+
+____________________________________________________________________________________________________
+
+
+
+# Discussion
+
+Reducing Readmissions (47.2%)
+High-risk groups: Ages 13-35 & 60-75
+Solutions: Scheduled nurse check-ins, medication reminders, collaboration with primary care
+Decreasing Waiting Time (50 min, goal: 30 min)
+
+More nurses = shorter wait times
+Solutions: Staff redistribution, self-service check-in kiosks, smart triage system
+Optimizing Staff Utilization (2,400 units inefficiency)
+
+Solutions: Predictive analytics for staffing, cross-training, real-time monitoring system
+
+
+____________________________________________________________________________________________________
+
+
+
+
+# Recommendations
+
+1. Length of Stay Impact
+If any of the "Length of Stay" variables have a significant p-value (Pr(>|z|) < 0.05), shorter stays may reduce readmissions.
+Recommendation: Optimize discharge planning to avoid unnecessarily long stays.
+
+2. Age Group Influence
+Significant coefficients in "age.(0-12)", "age.(13-35)", etc., indicate that certain age groups have higher/lower readmission risks.
+Recommendation: Provide age-specific post-discharge care to reduce readmissions.
+
+3. Medical Specialty & Ward Assignment
+If "medical_specialty.Cardiology" or "Ward Name.Cardiology Ward" is significant, cardiology patients may need better post-discharge care.
+Recommendation: Implement targeted follow-up plans based on specialty-specific risks.
+
+4. Glucose Test & Diabetes Medication
+"glucose_test" and "diabetes_med" significance suggests diabetes management affects readmission risk.
+Recommendation: Improve glucose monitoring and medication adherence programs.
+
+5. Hospital Visit Timing & Waiting Time
+"Time Visited Hospital.1:00 AM - 5:00 AM", etc., could indicate readmission risk varies by visit time.
+"Waiting Time" significance suggests high waiting times increase readmissions.
+Recommendation: Optimize staffing and appointment scheduling to reduce wait times.
+
+
+
+____________________________________________________________________________________________________
+
+
+
+
+# Conclusion
+
+Better staff allocation cuts wait times. Predictive analytics prevent readmissions. Smarter scheduling boosts efficiency.
+
+Next Steps:
+Use ML for real-time forecasting.
+Expand data for broader insights.
+Train staff with data-driven strategies.
+
+
+
+____________________________________________________________________________________________________
+
+
+
+# References
+(dataset : https://www.kaggle.com/datasets/dubradave/hospital-readmissions
+)
+
+
+____________________________________________________________________________________________________
+
+
+
+
+# LLM Use Declaration
+
+We utilized LLMs in the following ways:
+•	Brainstorming: Generating ideas for problem-solving approaches.
+•	Code Reference: Assisting in writing and debugging R code.
+•	Proofreading: Refining report structure and clarity.
+•	Chatgpt : For code generation and correction
+LLMs were not used for direct copy-pasting of content or automated decision-making. All final analyses and recommendations were reviewed and validated by the project team.
+
+
+
+
+____________________________________________________________________________________________________
+
+
+
+# Tests and Analysis:
+
+
+
+```{r}
+# Load necessary libraries
+library(readxl)
+library(caret)
+library(dplyr)
+library(ggplot2)
+
+# Load dataset
+data <- read_excel("C:/Users/Gauri Vijay Nagre/Desktop/Sem_2/BA/BA_Lifeline_Hospital_Dashboard/Hospital Dataset3.xlsx", sheet = "Sheet1")
+head(data)
+```
+
+## Objectives:
+#### 1. Reduce patient readmission rates by addressing underlying factors. 
+#### 2. Optimize staff scheduling to align with peak patient visit times. 
+#### 3. Shorten patient waiting times to improve satisfaction and care quality. 
+#### 4. Enhance operational efficiency through targeted interventions and analytics.
+
+
+# Test Performance:
+
+## T-Test: Waiting Time vs. Readmission -
+We perform the T-Test to check if average waiting time differs between readmitted and non-readmitted patients. A significant result would suggest waiting time impacts readmission rates, guiding reduction strategies.
+
+```{r}
+t_test_result <- t.test(`Waiting Time` ~ readmitted, data = data)
+t_test_result
+```
+#### Insights: The T-test shows no significant difference in average waiting times between readmitted and non-readmitted patients (p = 0.5529, which is > 0.05). This suggests that waiting time is not a major factor influencing readmission rates.
+
+
+
+
+## ANOVA: Waiting Time vs. Medical Specialty
+We perform ANOVA to check if average waiting times significantly differ across different medical specialties. If significant, it helps identify departments causing longer waits, aiding in staff optimization.
+
+```{r}
+anova_result <- aov(`Waiting Time` ~ medical_specialty, data = data)
+summary(anova_result)
+```
+#### Insights: The ANOVA test shows no significant difference in average waiting times across medical specialties (p = 0.311, which is > 0.05). This suggests that waiting time is not strongly influenced by the medical specialty.
+
+
+
+## Chi-Square Test: Readmission vs. Ward Name
+We perform the Chi-Square test to check if readmission rates vary across different hospital wards. A significant result would suggest that certain wards have higher readmission risks, helping in targeted interventions.
+
+```{r}
+table_ward <- table(data$readmitted, data$`Ward Name`)
+chisq_test_ward <- chisq.test(table_ward)
+chisq_test_ward
+```
+#### Insights:The Chi-Square test shows no significant association between ward name and readmission rates (p = 0.1193, which is > 0.05). This suggests that readmission likelihood does not vary significantly across different hospital wards.
+
+
+
+#Logistic Regression:
+
+```{r}
+# Convert categorical variables to factors
+data$age <- as.factor(data$age)
+data$`Length of Stay` <- as.factor(data$`Length of Stay`)
+data$medical_specialty <- as.factor(data$medical_specialty)
+data$`Ward Name` <- as.factor(data$`Ward Name`)
+data$`Time Visited Hospital` <- as.factor(data$`Time Visited Hospital`)
+data$readmitted <- as.factor(data$readmitted)
+
+# Select relevant columns
+data <- dplyr::select(data, -`Patient ID`, -`Nurses Attending`, -`Doctors Attending`)
+
+# Store the target variable before encoding
+target <- data$readmitted  
+
+# Store the target variable before encoding
+target <- data$readmitted  
+
+# Convert categorical variables using one-hot encoding (excluding readmitted)
+data <- dplyr::select(data, -readmitted)  # Ensure proper selection
+dummy_model <- dummyVars(" ~ .", data = data)
+data <- predict(dummy_model, newdata = data) %>% as.data.frame()
+
+# Restore the target variable
+data$readmitted <- target
+data$readmitted <- as.factor(data$readmitted)  # Ensure it's a factor
+
+# Restore the target variable
+data$readmitted <- target
+
+# Ensure readmitted is still a factor
+data$readmitted <- as.factor(data$readmitted)
+
+# Split into training and testing sets
+set.seed(123)
+trainIndex <- createDataPartition(data$readmitted, p = 0.7, list = FALSE)
+trainData <- data[trainIndex, ]
+testData <- data[-trainIndex, ]
+
+# Train logistic regression model
+model <- glm(readmitted ~ ., data = trainData, family = binomial)
+
+# Model summary
+summary(model)
+
+# Predictions on test data
+testData$predicted <- predict(model, newdata = testData, type = "response")
+testData$predicted_class <- ifelse(testData$predicted > 0.5, 1, 0)
+
+# Model evaluation
+conf_matrix <- table(testData$readmitted, testData$predicted_class)
+accuracy <- sum(diag(conf_matrix)) / sum(conf_matrix)
+print(paste("Model Accuracy:", round(accuracy, 4)*100))
+
+```
+
+
+
+```{r}
+# Print available coefficient names to check transformations
+print(rownames(summary(model)$coefficients))
+
+# Recommendations
+cat("\nRecommendations:")
+
+# Identify transformed column names
+waiting_time_col <- grep("Waiting Time", rownames(summary(model)$coefficients), value = TRUE)
+glucose_test_col <- grep("glucose_test", rownames(summary(model)$coefficients), value = TRUE)
+
+# Check if 'Waiting Time' variable is significant
+if (length(waiting_time_col) > 0 && summary(model)$coefficients[waiting_time_col, "Pr(>|z|)"] < 0.05) {
+  cat("\n- Reduce waiting time to decrease readmission rates.")
+}
+
+# Check if 'glucose_test' variable is significant
+if (length(glucose_test_col) > 0 && summary(model)$coefficients[glucose_test_col, "Pr(>|z|)"] < 0.05) {
+  cat("\n- Monitor glucose levels closely for better patient outcomes.")
+}
+
+```
+

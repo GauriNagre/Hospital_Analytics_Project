@@ -21,7 +21,7 @@ This project analyzes hospital patient data to uncover patterns in readmissions,
 - Longest waiting time associated with Doctor D-CAR-003
 
 ## Dashboard Preview
-(Upload your dashboard to Tableau Public and include the link here)
+![image](https://github.com/user-attachments/assets/14bd7aea-518f-45ce-8779-fa16ba71e170)
 
 ## Author
 [Gauri Nagre] – MBA in Business Analytics

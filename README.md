@@ -13,7 +13,6 @@ This project analyzes hospital patient data to uncover patterns in readmissions,
 - `/r_code`: RMarkdown files for statistical analysis and reporting
 - `/tableau`: Tableau workbook for dashboard visualization
 - `/docs`: Business proposal and documentation
-- `/media`: Dashboard recording demo
 
 ## Key Insights
 - 47.2% readmission rate observed
@@ -24,4 +23,4 @@ This project analyzes hospital patient data to uncover patterns in readmissions,
 ![image](https://github.com/user-attachments/assets/14bd7aea-518f-45ce-8779-fa16ba71e170)
 
 ## Author
-[Gauri Nagre] – MBA in Business Analytics
+[Gauri Nagre] – MBA (Business Analytics)
